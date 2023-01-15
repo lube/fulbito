@@ -1,0 +1,8 @@
+fulbitodelosviernes.com.ar {
+    proxy / localhost:8080 {
+        transparent
+    }
+    tls {
+        on
+    }
+}
