@@ -2,7 +2,10 @@ module fulbito
 
 go 1.18
 
-require google.golang.org/api v0.107.0
+require (
+	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
+	google.golang.org/api v0.107.0
+)
 
 require (
 	cloud.google.com/go/compute v1.14.0 // indirect
