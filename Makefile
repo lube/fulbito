@@ -9,4 +9,7 @@ install:
 clean:
 	rm -f fulbito
 
-.PHONY: all build clean
+prod-reload:
+	sudo systemctl stop fulbito && make && sudo systemctl start fulbito
+
+.PHONY: all build clean prod-reload
