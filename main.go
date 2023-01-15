@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 )
 
 func main() {
@@ -72,6 +73,20 @@ func main() {
 		srv := &http.Server{Addr: "fulbitodelosviernes.com.ar:https", TLSConfig: &tls.Config{
 			GetCertificate: m.GetCertificate,
 		}}
+
+		go func() {
+			ss := &http.Server{
+				Addr:         ":80",
+				Handler:      m.HTTPHandler(nil),
+				IdleTimeout:  time.Minute,
+				ReadTimeout:  5 * time.Second,
+				WriteTimeout: 10 * time.Second,
+			}
+
+			err := ss.ListenAndServe()
+			log.Fatal(err)
+		}()
+
 		log.Fatal(srv.ListenAndServeTLS("", ""))
 	} else {
 		log.Fatal(http.ListenAndServe(":8080", nil))
