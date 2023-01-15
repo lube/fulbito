@@ -17,8 +17,12 @@ func main() {
 		},
 	}
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		t, _ := template.ParseFiles("./static/index.tmpl")
-		err := t.Funcs(helpers).Execute(w, map[string]interface{}{
+		t, err := template.ParseFiles("./static/index.tmpl")
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
+		err = t.Funcs(helpers).Execute(w, map[string]interface{}{
 			"Elo":    rating.ProcessAllMatchResultsAndGetEloRating(sheets.RetrieveGoogleSheetsResults()),
 			"Glicko": rating.ProcessAllMatchResultsAndGetGlickoRating(sheets.RetrieveGoogleSheetsResults()),
 		})
