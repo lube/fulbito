@@ -144,10 +144,11 @@ func processMatchResultElo(playerRatings []domain.EloPlayerRating, result domain
 func processMatchResultGlicko(playerRatings []domain.GlickoPlayerRating, result domain.MatchResult) []domain.GlickoPlayerRating {
 	// Define the system constant
 	var (
-		initialRanking    float64 = 1500
-		rankingDeviation  float64 = 700
-		rankingVolatility float64 = 0.12
-		tau               float64 = 0.3
+		initialRanking           float64 = 1500
+		initialRankingDeviation  float64 = 700
+		initialRankingVolatility float64 = 0.12
+		tau                      float64 = 0.3
+		k                                = 24
 	)
 	// calculate the expected score for each team
 	team1ExpectedScore := 0.0
@@ -160,8 +161,8 @@ func processMatchResultGlicko(playerRatings []domain.GlickoPlayerRating, result 
 				p1 = domain.GlickoPlayerRating{
 					Name:            player1,
 					Rating:          initialRanking,
-					RatingDeviation: rankingDeviation,
-					Volatility:      rankingVolatility,
+					RatingDeviation: initialRankingDeviation,
+					Volatility:      initialRankingVolatility,
 				}
 				playerRatings = append(playerRatings, p1)
 			}
@@ -171,8 +172,8 @@ func processMatchResultGlicko(playerRatings []domain.GlickoPlayerRating, result 
 				p2 = domain.GlickoPlayerRating{
 					Name:            player2,
 					Rating:          initialRanking,
-					RatingDeviation: rankingDeviation,
-					Volatility:      rankingVolatility,
+					RatingDeviation: initialRankingDeviation,
+					Volatility:      initialRankingVolatility,
 				}
 				playerRatings = append(playerRatings, p2)
 			}
@@ -188,9 +189,9 @@ func processMatchResultGlicko(playerRatings []domain.GlickoPlayerRating, result 
 		_, p := getPlayerG(result.WinnerTeam[i], playerRatings)
 
 		if result.Draw {
-			p = processGlickoUpdate(p, 0.5, team1ExpectedScore/float64(len(result.WinnerTeam)), tau)
+			p = processGlickoUpdate(p, 0.5, team1ExpectedScore/float64(len(result.WinnerTeam)), tau, k)
 		} else {
-			p = processGlickoUpdate(p, 1, team1ExpectedScore/float64(len(result.WinnerTeam)), tau)
+			p = processGlickoUpdate(p, 1, team1ExpectedScore/float64(len(result.WinnerTeam)), tau, k)
 		}
 		p.GamesPlayed += 1
 		updatePlayerG(p, playerRatings)
@@ -199,9 +200,9 @@ func processMatchResultGlicko(playerRatings []domain.GlickoPlayerRating, result 
 		_, p := getPlayerG(result.LoserTeam[i], playerRatings)
 
 		if result.Draw {
-			p = processGlickoUpdate(p, 0.5, team2ExpectedScore/float64(len(result.LoserTeam)), tau)
+			p = processGlickoUpdate(p, 0.5, team2ExpectedScore/float64(len(result.LoserTeam)), tau, k)
 		} else {
-			p = processGlickoUpdate(p, 0, team2ExpectedScore/float64(len(result.LoserTeam)), tau)
+			p = processGlickoUpdate(p, 0, team2ExpectedScore/float64(len(result.LoserTeam)), tau, k)
 		}
 		p.GamesPlayed += 1
 		updatePlayerG(p, playerRatings)
@@ -274,12 +275,12 @@ func GenerateTeamsElo(playerList []string, playerRatings []domain.EloPlayerRatin
 	return team1, team2
 }
 
-func processGlickoUpdate(p domain.GlickoPlayerRating, result float64, expected float64, tau float64) domain.GlickoPlayerRating {
+func processGlickoUpdate(p domain.GlickoPlayerRating, result float64, expected float64, tau float64, k int) domain.GlickoPlayerRating {
 	var (
 		delta  float64
 		newVol float64
 	)
-	delta = result - expected
+	delta = float64(k) * (result - expected)
 	newVol = 1 / math.Sqrt((1/math.Pow(p.Volatility, 2))+(1/math.Pow(p.RatingDeviation, 2)))
 	p.Rating = p.Rating + newVol*g(p.RatingDeviation)*delta
 	p.RatingDeviation = math.Sqrt(1 / (1/math.Pow(p.RatingDeviation, 2) + 1/math.Pow(newVol, 2)))
