@@ -11,6 +11,7 @@ type GlickoPlayerRating struct {
 	Rating          float64
 	RatingDeviation float64
 	Volatility      float64
+	GamesPlayed     int
 }
 
 type MatchResult struct {

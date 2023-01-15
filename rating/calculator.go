@@ -192,6 +192,7 @@ func processMatchResultGlicko(playerRatings []domain.GlickoPlayerRating, result 
 		} else {
 			p = processGlickoUpdate(p, 1, team1ExpectedScore/float64(len(result.WinnerTeam)), tau)
 		}
+		p.GamesPlayed += 1
 		updatePlayerG(p, playerRatings)
 	}
 	for i := range result.LoserTeam {
@@ -202,6 +203,7 @@ func processMatchResultGlicko(playerRatings []domain.GlickoPlayerRating, result 
 		} else {
 			p = processGlickoUpdate(p, 0, team2ExpectedScore/float64(len(result.LoserTeam)), tau)
 		}
+		p.GamesPlayed += 1
 		updatePlayerG(p, playerRatings)
 	}
 
