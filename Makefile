@@ -4,6 +4,6 @@ build:
 	go build
 
 clean:
-	rm -f app
+	rm -f fulbito
 
 .PHONY: all build clean
