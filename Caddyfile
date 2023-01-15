@@ -1,6 +1,5 @@
 fulbitodelosviernes.com.ar {
-    import proxy
-    proxy / localhost:8080 {
+    reverse_proxy  localhost:8080 {
         transparent
     }
     tls {
