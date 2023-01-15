@@ -1,7 +1,6 @@
 package main
 
 import (
-	"crypto/tls"
 	"fulbito/rating"
 	"fulbito/sheets"
 	"golang.org/x/crypto/acme/autocert"
@@ -63,8 +62,15 @@ func main() {
 	})
 
 	if os.Getenv("USE_TLS") == "true" {
-		srv := &http.Server{Addr: "fulbitodelosviernes.com.ar:https"}
-		setupTLS(srv, "sebastianlube@gmail.com", []string{"fulbitodelosviernes.com.ar", "www.fulbitodelosviernes.com.ar"})
+		m := &autocert.Manager{
+			Prompt:     autocert.AcceptTOS,
+			HostPolicy: autocert.HostWhitelist([]string{"fulbitodelosviernes.com.ar", "www.fulbitodelosviernes.com.ar"}...),
+			Email:      "sebastianlube@gmail.com",
+			Cache:      autocert.DirCache("/home/sebastianlube/.cache"),
+		}
+		srv := &http.Server{Addr: "fulbitodelosviernes.com.ar:https", TLSConfig: m.TLSConfig()}
+		srv.Handler = m.HTTPHandler(srv.Handler)
+		// srv.TLSConfig = &tls.Config{GetCertificate: m.GetCertificate}
 		log.Fatal(srv.ListenAndServeTLS("", ""))
 	} else {
 		log.Fatal(http.ListenAndServe(":8080", nil))
@@ -72,12 +78,4 @@ func main() {
 }
 
 func setupTLS(srv *http.Server, email string, domains []string) {
-	m := &autocert.Manager{
-		Prompt:     autocert.AcceptTOS,
-		HostPolicy: autocert.HostWhitelist(domains...),
-		Email:      email,
-		Cache:      autocert.DirCache("/home/sebastianlube/.cache"),
-	}
-	srv.TLSConfig = &tls.Config{GetCertificate: m.GetCertificate}
-	srv.Handler = m.HTTPHandler(srv.Handler)
 }
