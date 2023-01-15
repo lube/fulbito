@@ -76,7 +76,7 @@ func setupTLS(srv *http.Server, email string, domains []string) {
 		Prompt:     autocert.AcceptTOS,
 		HostPolicy: autocert.HostWhitelist(domains...),
 		Email:      email,
-		Cache:      autocert.DirCache("path/to/cache"),
+		Cache:      autocert.DirCache("/home/sebastianlube/.cache"),
 	}
 	srv.TLSConfig = &tls.Config{GetCertificate: m.GetCertificate}
 	srv.Handler = m.HTTPHandler(srv.Handler)
