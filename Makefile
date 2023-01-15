@@ -4,7 +4,7 @@ build:
 	go build
 
 install:
-	mv fulbito /usr/local/bin
+	sudo mv fulbito /usr/local/bin
 
 clean:
 	rm -f fulbito
