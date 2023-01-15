@@ -11,18 +11,19 @@ import (
 )
 
 func main() {
-	helpers := template.FuncMap{
-		"FormatNumber": func(value float64) string {
-			return fmt.Sprintf("%.4f", value)
-		},
-	}
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		t, err := template.ParseFiles("./static/index.tmpl")
+		helpers := template.FuncMap{
+			"FormatNumber": func(value float64) string {
+				return fmt.Sprintf("%.4f", value)
+			},
+		}
+
+		t, err := template.New("index").Funcs(helpers).ParseFiles("./static/index.tmpl")
 		if err != nil {
 			log.Fatal(err)
 			return
 		}
-		err = t.Funcs(helpers).Execute(w, map[string]interface{}{
+		err = t.Execute(w, map[string]interface{}{
 			"Elo":    rating.ProcessAllMatchResultsAndGetEloRating(sheets.RetrieveGoogleSheetsResults()),
 			"Glicko": rating.ProcessAllMatchResultsAndGetGlickoRating(sheets.RetrieveGoogleSheetsResults()),
 		})
@@ -64,7 +65,7 @@ func main() {
 			}
 		}
 
-		if err = t.Funcs(helpers).Execute(w, data); err != nil {
+		if err = t.Execute(w, data); err != nil {
 			return
 		}
 	})
