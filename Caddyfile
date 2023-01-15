@@ -1,7 +1,5 @@
 fulbitodelosviernes.com.ar {
-    reverse_proxy  localhost:8080 {
-        transparent
-    }
+    reverse_proxy  localhost:8080
     tls {
         on
     }
