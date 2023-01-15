@@ -1,7 +1,10 @@
-all: build
+all: build install
 
 build:
 	go build
+
+install:
+	mv fulbito /usr/local/bin
 
 clean:
 	rm -f fulbito
