@@ -18,7 +18,7 @@ func main() {
 			},
 		}
 
-		t, err := template.New("index").Funcs(helpers).ParseFiles("./static/index.tmpl")
+		t, err := template.New("index.tmpl").Funcs(helpers).ParseFiles("./static/index.tmpl")
 		if err != nil {
 			log.Fatal(err)
 			return
