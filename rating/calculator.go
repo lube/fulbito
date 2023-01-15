@@ -148,7 +148,7 @@ func processMatchResultGlicko(playerRatings []domain.GlickoPlayerRating, result 
 		initialRankingDeviation  float64 = 700
 		initialRankingVolatility float64 = 0.12
 		tau                      float64 = 0.3
-		k                                = 72
+		k                                = 24
 	)
 	// calculate the expected score for each team
 	team1ExpectedScore := 0.0

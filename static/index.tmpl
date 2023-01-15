@@ -35,7 +35,7 @@
                 {{range $p := .Elo}}
                 <tr>
                     <td class="border px-4 py-2"> {{ $p.Name }}</td>
-                    <td class="border px-4 py-2"> {{ $p.Rating }}</td>
+                    <td class="border px-4 py-2"> {{ $p.Rating | FormatNumber }}</td>
                     <td class="border px-4 py-2"> {{ $p.GamesPlayed }}</td>
                 </tr>
                 {{- end}}
@@ -57,7 +57,7 @@
                 {{range $p := .Glicko}}
                 <tr>
                     <td class="border px-4 py-2"> {{ $p.Name }}</td>
-                    <td class="border px-4 py-2"> {{ $p.Rating }}</td>
+                    <td class="border px-4 py-2"> {{ $p.Rating | FormatNumber }}</td>
                     <td class="border px-4 py-2"> {{ $p.GamesPlayed }}</td>
                 </tr>
                 {{- end}}
