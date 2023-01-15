@@ -1,4 +1,5 @@
 fulbitodelosviernes.com.ar {
+    import proxy
     proxy / localhost:8080 {
         transparent
     }
