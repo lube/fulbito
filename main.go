@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"fulbito/rating"
 	"fulbito/sheets"
 	"golang.org/x/crypto/acme/autocert"
@@ -66,11 +67,11 @@ func main() {
 			Prompt:     autocert.AcceptTOS,
 			HostPolicy: autocert.HostWhitelist([]string{"fulbitodelosviernes.com.ar", "www.fulbitodelosviernes.com.ar"}...),
 			Email:      "sebastianlube@gmail.com",
-			Cache:      autocert.DirCache("/home/sebastianlube/.cache"),
+			Cache:      autocert.DirCache("certs"),
 		}
-		srv := &http.Server{Addr: "fulbitodelosviernes.com.ar:https", TLSConfig: m.TLSConfig()}
-		srv.Handler = m.HTTPHandler(srv.Handler)
-		// srv.TLSConfig = &tls.Config{GetCertificate: m.GetCertificate}
+		srv := &http.Server{Addr: "fulbitodelosviernes.com.ar:https", TLSConfig: &tls.Config{
+			GetCertificate: m.GetCertificate,
+		}}
 		log.Fatal(srv.ListenAndServeTLS("", ""))
 	} else {
 		log.Fatal(http.ListenAndServe(":8080", nil))
