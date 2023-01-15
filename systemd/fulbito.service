@@ -1,0 +1,13 @@
+[Unit]
+Description=fulbito
+
+[Service]
+ExecStart=/usr/local/bin/fulbito
+Restart=always
+User=root
+Group=root
+WorkingDirectory=/home/sebastianlube/fulbito
+Environment=USE_TLS=true
+
+[Install]
+WantedBy=multi-user.target

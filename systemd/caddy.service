@@ -1,0 +1,13 @@
+[Unit]
+Description=Caddy Web Server
+After=network.target
+
+[Service]
+User=root
+Group=root
+ExecStart=/usr/bin/caddy run --config /home/sebastianlube/fulbito/Caddyfile
+ExecReload=/usr/bin/caddy reload --config /home/sebastianlube/fulbito/Caddyfile
+ExecStop=/usr/local/bin/caddy stop
+
+[Install]
+WantedBy=multi-user.target
