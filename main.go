@@ -63,7 +63,7 @@ func main() {
 	})
 
 	if os.Getenv("USE_TLS") == "true" {
-		srv := &http.Server{Addr: ":https"}
+		srv := &http.Server{Addr: "fulbitodelosviernes.com.ar:https"}
 		setupTLS(srv, "sebastianlube@gmail.com", []string{"fulbitodelosviernes.com.ar", "www.fulbitodelosviernes.com.ar"})
 		log.Fatal(srv.ListenAndServeTLS("", ""))
 	} else {
